@@ -52,4 +52,4 @@ alert_text_args:
 alert:
   - slack
 
-#slack_webhook_url: "https://hooks.slack.com/services/CONFIGURE_WEBHOOK"
+#slack_webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
