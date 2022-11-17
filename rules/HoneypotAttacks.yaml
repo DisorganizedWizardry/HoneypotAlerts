@@ -1,0 +1,55 @@
+# Rule name, must be unique
+name: T-Pot Honeypot Attacks
+
+# Alert on x events in y seconds
+type: frequency
+
+# Alert when this many documents matching the query occur within a timeframe
+num_events: 1
+
+# num_events must occur within this amount of time to trigger an alert
+timeframe:
+  minutes: 15
+
+# A list of elasticsearch filters used for find events
+# These filters are joined with AND and nested in a filtered query
+# For more info: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
+filter:
+- query:
+    query_string:
+      query: "NOT src_ip: 172.26.0.1 AND src_ip:* AND (type.keyword:Adbhoney OR type.keyword:Ciscoasa OR type.keyword:CitrixHoneypot OR type.keyword:ConPot OR type.keyword:Cowrie OR type.keyword:Ddospot OR type.keyword:Dicompot OR type.keyword:Dionaea OR type.keyword:ElasticPot OR type.keyword:Endlessh OR type.keyword:Glutton OR type.keyword:Hellpot OR type.keyword:Heralding OR type.keyword:Honeytrap OR type.keyword:Honeypots OR type.keyword:Log4pot OR type.keyword:Ipphoney OR type.keyword:Mailoney OR type.keyword:Medpot OR type.keyword:Redishoneypot OR type.keyword:Tanner OR type.keyword:Wordpot)"
+
+index: logstash-*
+
+# When the attacker continues, send a new alert after x minutes
+realert:
+  minutes: 30
+
+query_key:
+  - src_ip
+
+include:
+  - eventid
+  - type
+  - src_ip
+
+include_match_in_root: true
+
+alert_subject: "T-Pot detected abuse <{}>"
+alert_subject_args:
+  - src_ip
+
+alert_text: |-
+  T-Pot detected an attack.
+  The attacker looks like:
+  Type: {}
+  IP: {}
+alert_text_args:
+  - type
+  - src_ip
+
+# The alert is use when a match is found
+alert:
+  - slack
+
+#slack_webhook_url: "https://hooks.slack.com/services/CONFIGURE_WEBHOOK"
